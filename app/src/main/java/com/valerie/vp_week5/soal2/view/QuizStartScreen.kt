@@ -1,8 +1,5 @@
 package com.valerie.vp_week5.soal2.view
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,11 +16,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -54,56 +48,42 @@ internal fun QuizStartScreen(viewModel: QuizViewModel) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        val interactionSource = remember { MutableInteractionSource() }
-        val isFocused by interactionSource.collectIsFocusedAsState()
-        val isError = viewModel.numberError != null
-        val borderColor = when {
-            isError -> QuizWrongColor
-            isFocused -> QuizPrimaryColor
-            else -> MaterialTheme.colorScheme.outline
-        }
-
         OutlinedTextField(
             value = viewModel.numberOfQuestionsInput,
             onValueChange = viewModel::onNumberOfQuestionsChange,
             label = { Text("Number of questions") },
-            isError = isError,
+            isError = viewModel.numberError != null,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            interactionSource = interactionSource,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent,
-                errorBorderColor = Color.Transparent,
+                focusedBorderColor = QuizPrimaryColor,
                 focusedLabelColor = QuizPrimaryColor,
+                cursorColor = QuizPrimaryColor,
+                errorBorderColor = QuizWrongColor,
                 errorLabelColor = QuizWrongColor,
-                cursorColor = QuizPrimaryColor
+                errorCursorColor = QuizWrongColor
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(width = 2.dp, color = borderColor, shape = OutlinedTextFieldDefaults.shape)
+            modifier = Modifier.fillMaxWidth()
         )
 
-        if (viewModel.numberError != null) {
-            Text(
-                text = viewModel.numberError.orEmpty(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, top = 4.dp)
-            )
-        }
+        Text(
+            text = viewModel.numberError.orEmpty(),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodySmall,
+            textAlign = TextAlign.Start,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, top = 4.dp)
+        )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Button(
             onClick = viewModel::startQuiz,
             enabled = viewModel.canStartQuiz,
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(
-                containerColor = QuizPrimaryLightColor,
+                containerColor = QuizPrimaryColor,
                 disabledContainerColor = QuizDisabledColor
             ),
             modifier = Modifier

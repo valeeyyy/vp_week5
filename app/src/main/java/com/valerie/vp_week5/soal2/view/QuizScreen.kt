@@ -12,8 +12,7 @@ import com.valerie.vp_week5.soal2.viewmodel.QuizScreenState
 import com.valerie.vp_week5.soal2.viewmodel.QuizViewModel
 
 internal val QuizScreenBackground = Color(0xFFF5F3FA)
-internal val QuizPrimaryColor = Color(0xFF3B4371)
-internal val QuizPrimaryLightColor = Color(0xFF6C77A6)
+internal val QuizPrimaryColor = Color(0xFF505D88)
 internal val QuizOptionBackground = Color(0xFFE4E1F7)
 internal val QuizDisabledColor = Color(0xFFD9D9DB)
 internal val QuizWrongColor = Color(0xFFD64545)

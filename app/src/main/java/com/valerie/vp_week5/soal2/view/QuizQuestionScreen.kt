@@ -45,7 +45,7 @@ internal fun QuizQuestionScreen(viewModel: QuizViewModel) {
         Text(
             text = question.text,
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
             modifier = Modifier

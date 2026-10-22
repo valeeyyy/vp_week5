@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -56,14 +54,15 @@ internal fun QuizResultScreen(viewModel: QuizViewModel) {
             Text(
                 text = "Perfect! No wrong answers.",
                 style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Normal,
                 color = QuizPrimaryColor,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(20.dp))
         } else {
-            LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                items(viewModel.wrongAnswers) { wrongAnswer ->
+            Column(modifier = Modifier.fillMaxWidth()) {
+                viewModel.wrongAnswers.forEach { wrongAnswer ->
                     WrongAnswerRow(answer = wrongAnswer, allAnswers = viewModel.answers)
                 }
             }
