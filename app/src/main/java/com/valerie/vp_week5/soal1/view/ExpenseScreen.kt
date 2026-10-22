@@ -21,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,87 +42,85 @@ internal val AddButtonBackground = Color(0xFFEBEBED)
 internal val AddButtonIcon = Color(0xFF9E9E9E)
 
 @Composable
-fun ExpenseScreen(viewModel: ExpenseViewModel = viewModel()) {
-    Scaffold(containerColor = ScreenBackground) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 20.dp, vertical = 16.dp)
-        ) {
-            Text(
-                text = "Expenses",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Total Expense : ${formatRupiah(viewModel.totalExpense)}",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+fun ExpenseScreen(viewModel: ExpenseViewModel = viewModel(), modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(ScreenBackground)
+            .padding(horizontal = 20.dp, vertical = 16.dp)
+    ) {
+        Text(
+            text = "Expenses",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = "Total Expense : ${formatRupiah(viewModel.totalExpense)}",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
+        OutlinedTextField(
+            value = viewModel.nameInput,
+            onValueChange = viewModel::onNameChange,
+            label = { Text("Expense Name") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
             OutlinedTextField(
-                value = viewModel.nameInput,
-                onValueChange = viewModel::onNameChange,
-                label = { Text("Expense Name") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                value = viewModel.amountInput,
+                onValueChange = viewModel::onAmountChange,
+                label = { Text("Amount of Expense") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                isError = viewModel.errorMessage != null,
+                singleLine = true,
+                modifier = Modifier.weight(1f)
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                OutlinedTextField(
-                    value = viewModel.amountInput,
-                    onValueChange = viewModel::onAmountChange,
-                    label = { Text("Amount of Expense") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    isError = viewModel.errorMessage != null,
-                    singleLine = true,
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                IconButton(
-                    onClick = viewModel::addExpense,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(AddButtonBackground, CircleShape)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add Expense",
-                        tint = AddButtonIcon
-                    )
-                }
-            }
-
-            if (viewModel.errorMessage != null) {
-                Text(
-                    text = viewModel.errorMessage.orEmpty(),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
+            Spacer(modifier = Modifier.width(8.dp))
+            IconButton(
+                onClick = viewModel::addExpense,
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(AddButtonBackground, CircleShape)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Expense",
+                    tint = AddButtonIcon
                 )
             }
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
+        if (viewModel.errorMessage != null) {
+            Text(
+                text = viewModel.errorMessage.orEmpty(),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
 
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                items(viewModel.expenses, key = { it.id }) { expense ->
-                    ExpenseItem(
-                        expense = expense,
-                        isEditing = viewModel.editingExpenseId == expense.id,
-                        editAmountInput = viewModel.editAmountInput,
-                        editErrorMessage = viewModel.editErrorMessage,
-                        onEditAmountChange = viewModel::onEditAmountChange,
-                        onStartEdit = { viewModel.startEdit(expense) },
-                        onConfirmEdit = viewModel::confirmEdit,
-                        onCancelEdit = viewModel::cancelEdit,
-                        onDelete = { viewModel.deleteExpense(expense.id) }
-                    )
-                }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            items(viewModel.expenses, key = { it.id }) { expense ->
+                ExpenseItem(
+                    expense = expense,
+                    isEditing = viewModel.editingExpenseId == expense.id,
+                    editAmountInput = viewModel.editAmountInput,
+                    editErrorMessage = viewModel.editErrorMessage,
+                    onEditAmountChange = viewModel::onEditAmountChange,
+                    onStartEdit = { viewModel.startEdit(expense) },
+                    onConfirmEdit = viewModel::confirmEdit,
+                    onCancelEdit = viewModel::cancelEdit,
+                    onDelete = { viewModel.deleteExpense(expense.id) }
+                )
             }
         }
     }
